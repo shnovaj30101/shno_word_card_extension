@@ -4,7 +4,7 @@ let awca_options = {
     prefix: 'awca_'
 };
 
-(function() {
+(async function() {
     let main_status = "close";
     let select_text = '';
     let display_elem = null;
@@ -241,7 +241,7 @@ let awca_options = {
         render_arr.push('</div>')
 
         render_arr.push('<input type="text" class="'+awca_options.prefix+'problem_input" \
-            value= "' + str.replace(/'/g,"&apos;").replace(/"/g,'&quot;') + '"\
+            value= "' + str.replace(/'/g,"&apos;").replace(/"/g,'&quot;').replace(/,/g,'').replace(/\.$/g,'') + '"\
             style="margin: 5px;\
                 margin-top: 0px;\
                 margin-left: -5px;\
@@ -311,30 +311,43 @@ let awca_options = {
 
     }
 
-    document.onmouseup = function(e) {
-        if (!hover_on_display_region() && main_status === "open") {
+    async function get_main_status() {
+        return new Promise(async (resolve,reject) => {
+            chrome.runtime.sendMessage({
+                type: "get_main_status",
+            }, function (response) {
+                return resolve(response.status);
+            });
+        })
+    }
+
+    document.onmouseup = async function(e) {
+        let status = await get_main_status();
+        if (!hover_on_display_region() && status === "open") {
             displaySelectionText(e);
         }
     };
 
-    document.onselectionchange = function(e) {
-        if (!hover_on_display_region() && main_status === "open") {
+    document.onselectionchange = async function(e) {
+        let status = await get_main_status();
+        if (!hover_on_display_region() && status === "open") {
             getSelectionText();
         }
     };
 
-    document.onmousedown = function(e) {
-        if (!hover_on_display_region() && main_status === "open") {
+    document.onmousedown = async function(e) {
+        let status = await get_main_status();
+        if (!hover_on_display_region() && status === "open") {
             getSelectionText();
         }
     }
 
-    chrome.runtime.onMessage.addListener(function(message, sender, sendResponse) {
-        if (message.main_status_set === "open") {
-            main_status = "open";
-        } else if (message.main_status_set === "close") {
-            main_status = "close";
-        }
-    });
+    //chrome.runtime.onMessage.addListener(function(message, sender, sendResponse) {
+        //if (message.main_status_set === "open") {
+            //main_status = "open";
+        //} else if (message.main_status_set === "close") {
+            //main_status = "close";
+        //}
+    //});
 
 })();
