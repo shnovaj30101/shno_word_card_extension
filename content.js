@@ -7,6 +7,13 @@ let awca_options = {
 (async function() {
     let main_status = "close";
     let select_text = '';
+    let problem_text = '';
+    // 會被 onmousedown 以及 onmousechange 影響
+    // 如果直接被 ensure problem event 使用可能會有問題
+    // 題目裡的文字可能會和select_text不一樣
+    // 例如可能有以下狀況(反白選取一段文字，然後點擊反白區域再放開):
+        // onmousedown -> onnouseup(題目文字不變) -> onmousechane (select_text改變)
+    // problem_text必須和 onmouseup 綁定 並且被 ensure_problem event 使用
     let display_elem = null;
 
     $(document).on('mouseover', '.'+awca_options.prefix+'delete_chosen_word', function () {
@@ -38,7 +45,7 @@ let awca_options = {
 
     $(document).on('click', '#'+awca_options.prefix+'ensure_problem_btn', function () {
         let problem_data_arr = [];
-        problem_data_arr.push(select_text);
+        problem_data_arr.push(problem_text);
 
         let problem_input_arr = [];
         if ($('.'+awca_options.prefix+'chosen_word').toArray().length === 0) {
@@ -73,7 +80,7 @@ let awca_options = {
         }
         problem_data_arr.push(answer_input_arr.join(','));
 
-        //console.log(problem_data_arr.join('\t'));
+        //alert(problem_data_arr.join('\t'));
 
         chrome.runtime.sendMessage({
             type: "send_problem",
@@ -106,7 +113,7 @@ let awca_options = {
         } else if (window.getSelection) {
             text = window.getSelection().toString();
         }
-        select_text = text;
+        select_text = text.trim(); // 避免結尾會有\n 這樣再最後寫檔的時候 同一筆資料卻有兩行
     }
 
     function displaySelectionText(e) {
@@ -116,7 +123,9 @@ let awca_options = {
             display_elem = null;
         }
 
-        if (select_text.trim().length > 0) {
+        problem_text = select_text.trim().replace(/[\n\t]+/g,' '); // 去掉所有換行符號和tab
+
+        if (problem_text.trim().length > 0) {
             display_elem = document.createElement("div");
             display_elem.setAttribute(
                 "style",
@@ -149,10 +158,9 @@ let awca_options = {
 
         render_arr.push('<div>')
 
-        let word_list = select_text.split(/\s+/);
+        let word_list = problem_text.split(/\s+/);
         for (let i = 0 ; i < word_list.length ; i++) {
             let word_encode = word_list[i].replace(/'/g, "&apos;").replace(/"/g, '&quot;').replace(/&/g,"&amp;");
-            console.log(word_encode)
             render_arr.push('<span class="'+awca_options.prefix+'word_span" data-index="' + i.toString() + '" data-word="' + word_encode + '">' + word_list[i] + "</span>");
         }
 
@@ -341,13 +349,5 @@ let awca_options = {
             getSelectionText();
         }
     }
-
-    //chrome.runtime.onMessage.addListener(function(message, sender, sendResponse) {
-        //if (message.main_status_set === "open") {
-            //main_status = "open";
-        //} else if (message.main_status_set === "close") {
-            //main_status = "close";
-        //}
-    //});
 
 })();
