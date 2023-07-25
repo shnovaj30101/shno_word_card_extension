@@ -11,7 +11,7 @@ $("#open-btn").click(function() {
         //)
     //});
 	chrome.runtime.sendMessage({ type: "set_status_open" }, function(response) {
-        chrome.browserAction.setBadgeText({text:''});
+        chrome.action.setBadgeText({text:''});
         console.log(response);
 	});
 });
@@ -27,7 +27,7 @@ $("#close-btn").click(function() {
 		//)
 	//});
 	chrome.runtime.sendMessage({ type: "set_status_close" }, function(response) {
-        chrome.browserAction.setBadgeText({text:'off'});
+        chrome.action.setBadgeText({text:'off'});
         console.log(response);
 	});
 });
