@@ -1,31 +1,68 @@
 
-let problem_list = [];
-let pre_problem_list = [];
-let main_status = 'close';
+class SWCBack {
+    constructor() {
+        this.problem_list = [];
+        this.pre_problem_list = [];
+        this.main_status = 'close';
 
-chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
-	if (request.type === "send_problem") {
-        //console.log(request.problem);
-        problem_list.push(request.problem);
-        //console.log(problem_list)
-        sendResponse({'success': true});
-    } else if (request.type === "get_problem_list") {
-        sendResponse({'problem_list': problem_list});
-        if (problem_list.length > 0) {
-            pre_problem_list = problem_list;
-        }
-		problem_list = [];
-    } else if (request.type === "get_problem_list_again") {
-        sendResponse({'problem_list': pre_problem_list});
-    } else if (request.type === "set_status_open") {
-        main_status = 'open';
-        sendResponse({'success': true});
-    } else if (request.type === "set_status_close") {
-        main_status = 'close';
-        sendResponse({'success': true});
-    } else if (request.type === "get_main_status") {
-        sendResponse({'status': main_status});
+        //this.ankiconnect = new Ankiconnect();
     }
-});
 
+    on_open() {
+        this.main_status = 'open';
+        chrome.action.setBadgeText({text:''});
+    }
+
+    on_close() {
+        this.main_status = 'close';
+        chrome.action.setBadgeText({text:'off'});
+    }
+
+    get_problem_list() {
+        return this.problem_list;
+    }
+
+    get_problem_list_again() {
+        return this.pre_problem_list;
+    }
+
+    get_main_status() {
+        return this.main_status;
+    }
+
+    clear_problem_list() {
+        if (this.problem_list.length > 0) {
+            this.pre_problem_list = this.problem_list;
+        }
+        this.problem_list = [];
+    }
+}
+
+let swcback = new SWCBack();
+
+function on_message(request, sender, callback) {
+    if (request.type === "send_problem") {
+        swcback.problem_list.push(request.problem);
+        callback({'success': true});
+    } else if (request.type === "get_problem_list") {
+        let problem_list = swcback.get_problem_list();
+        swcback.clear_problem_list();
+        callback({'problem_list': problem_list});
+    } else if (request.type === "get_problem_list_again") {
+        let problem_list = swcback.get_problem_list_again();
+        callback({'problem_list': problem_list});
+    } else if (request.type === "set_status_open") {
+        swcback.on_open();
+        callback({'success': true});
+    } else if (request.type === "set_status_close") {
+        swcback.on_close();
+        callback({'success': true});
+    } else if (request.type === "get_main_status") {
+        let main_status = swcback.get_main_status();
+        callback({'status': main_status});
+    }
+}
+
+chrome.runtime.onMessage.addListener(on_message);
 chrome.action.setBadgeText({text:'off'});
+
