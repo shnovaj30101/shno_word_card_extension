@@ -1,6 +1,6 @@
 <!doctype html>
 <html xmlns="http://www.w3.org/1999/xhtml"
-    style="height:100px; width:200px">
+    style="height:180px; width:200px">
   <head>
     <title>Anki單字擷取設定</title>
     <meta charset="UTF-8">
@@ -13,6 +13,15 @@
       <button id="close-btn">關閉</button>
       <button id="download-btn">下載</button>
       <button id="redownload-btn">重新下載</button>
+      <div id="ankiconnect_option">
+          <label>牌組：</label>
+          <select id="anki_deck">
+              <option value=""></option>
+          </select>
+          <br>
+          <label>標籤：</label>
+          <input id="anki_tag" type='text' style="display: inline">
+      </div>
     <script src="../lib/jquery.min.js"></script>
     <script src="popup.js"></script>
   </body>

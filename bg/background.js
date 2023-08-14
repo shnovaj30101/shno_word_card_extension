@@ -1,3 +1,4 @@
+import { Ankiconnect } from './ankiconnect.js';
 
 class SWCBack {
     constructor() {
@@ -5,7 +6,8 @@ class SWCBack {
         this.pre_problem_list = [];
         this.main_status = 'close';
 
-        //this.ankiconnect = new Ankiconnect();
+        this.ankiconnect = new Ankiconnect();
+        this.anki_deck_list = [];
     }
 
     on_open() {
@@ -60,6 +62,18 @@ function on_message(request, sender, callback) {
     } else if (request.type === "get_main_status") {
         let main_status = swcback.get_main_status();
         callback({'status': main_status});
+    } else if (request.type === "detect_anki_connect") {
+        (async () => {
+            let version = await swcback.ankiconnect.getVersion();
+
+            if (!version) {
+                callback({'success': false});
+            } else {
+                let deck_name_list = await swcback.ankiconnect.getDeckNames();
+                callback({'success': true, 'deck_name_list': deck_name_list});
+            }
+        })();
+        return true;
     }
 }
 
