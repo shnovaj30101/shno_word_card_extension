@@ -2,9 +2,12 @@
 
 <script>
 function add_answer() {
-    let answer_list = "{{answer_list}}".split(',');
-    for (let [index,input_elem] of $('.answer_input').toArray().entries()) {
-        $(input_elem).val(answer_list[index]);
+    var answer_list = "{{answer_list}}".split(',');
+    var inputElems = document.querySelectorAll('.answer_input');
+
+    for (var index = 0; index < inputElems.length; index++) {
+        var inputElem = inputElems[index];
+        inputElem.value = answer_list[index];
     }
 }
 add_answer();
