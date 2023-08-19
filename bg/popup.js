@@ -33,17 +33,35 @@ function saveText(filename, text) {
 	tempElem.click();
 }
 
+function on_ankiconnect_option_change() {
+    let target_value = $("#anki-deck").val();
+    console.log(`anki-deck target_value: ${target_value}`);
+	chrome.runtime.sendMessage({ type: "ankiconnect_ooption_change", value: target_value }, function(response) {
+        if (response.success === true) {
+            console.log("anki-deck change success");
+        } else {
+            console.log("anki-deck change fail");
+        }
+	});
+}
+
 function detect_anki_connect() {
 	chrome.runtime.sendMessage({ type: "detect_anki_connect" }, function(response) {
         if (response.success === true) {
             let deck_name_list = response.deck_name_list;
-            $("#anki_deck").empty();
+            let target_deck = response.anki_options.deck;
+            let anki_tag = response.anki_options.tag;
+            $("#anki-deck").empty();
             deck_name_list.forEach(
-                deck_name => $("#anki_deck").append($('<option>', {value: deck_name, text: deck_name}))
+                deck_name => $("#anki-deck").append($('<option>', {value: deck_name, text: deck_name}))
             );
-            $("#ankiconnect_option").show();
+            if (target_deck.length > 0 && deck_name_list.includes(target_deck)) {
+                $("#anki-deck").val(target_deck);
+            }
+            $("#anki-tag").val(anki_tag);
+            $("#ankiconnect-option").show();
         } else {
-            $("#ankiconnect_option").hide();
+            $("#ankiconnect-option").hide();
         }
 	});
 }
@@ -55,6 +73,7 @@ function onReady() {
     $("#close-btn").click(on_close);
     $("#download-btn").click(on_download);
     $("#redownload-btn").click(on_redownload);
+    $("#anki-deck").on("change", on_ankiconnect_option_change);
 }
 
 

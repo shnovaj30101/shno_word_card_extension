@@ -7,7 +7,10 @@ class SWCBack {
         this.main_status = 'close';
 
         this.ankiconnect = new Ankiconnect();
-        this.anki_deck_list = [];
+        this.anki_options = {
+            deck: '',
+            tag: 'SWC',
+        };
     }
 
     on_open() {
@@ -62,6 +65,10 @@ function on_message(request, sender, callback) {
     } else if (request.type === "get_main_status") {
         let main_status = swcback.get_main_status();
         callback({'status': main_status});
+    } else if (request.type === "ankiconnect_ooption_change") {
+        let target_value = request.value;
+        swcback.anki_options.deck = target_value;
+        callback({'success': true});
     } else if (request.type === "detect_anki_connect") {
         (async () => {
             let version = await swcback.ankiconnect.getVersion();
@@ -70,7 +77,18 @@ function on_message(request, sender, callback) {
                 callback({'success': false});
             } else {
                 let deck_name_list = await swcback.ankiconnect.getDeckNames();
-                callback({'success': true, 'deck_name_list': deck_name_list});
+                if (deck_name_list.length === 0) {
+                    swcback.anki_options.deck = '';
+                } else if (deck_name_list.length > 0 && swcback.anki_options.deck.length === 0) {
+                    swcback.anki_options.deck = deck_name_list[0];
+                } else if (deck_name_list.length > 0 && !deck_name_list.includes(swcback.anki_options.deck)) {
+                    swcback.anki_options.deck = deck_name_list[0];
+                }
+                callback({
+                    'success': true,
+                    'deck_name_list': deck_name_list,
+                    'anki_options': swcback.anki_options,
+                });
             }
         })();
         return true;
