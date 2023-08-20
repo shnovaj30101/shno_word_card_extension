@@ -49,38 +49,6 @@ class Ankiconnect {
         }
 
         return response.result;
-
-        //return new Promise((resolve, reject) => {
-
-            //$.ajax({
-                //url: 'http://127.0.0.1:8765',
-                //type: 'POST',
-                //data: JSON.stringify(request),
-                //timeout,
-                //contentType: 'application/json; charset=utf-8',
-                //dataType: 'json',
-                //success: (response) => {
-                    //try {
-                        //if (Object.getOwnPropertyNames(response).length != 2) {
-                            //throw 'response has an unexpected number of fields';
-                        //}
-                        //if (!response.hasOwnProperty('error')) {
-                            //throw 'response is missing required error field';
-                        //}
-                        //if (!response.hasOwnProperty('result')) {
-                            //throw 'response is missing required result field';
-                        //}
-                        //if (response.error) {
-                            //throw response.error;
-                        //}
-                        //resolve(response.result);
-                    //} catch (e) {
-                        //reject(e);
-                    //}
-                //},
-                //error: (xhr, status, err) => resolve(null),
-            //});
-        //});
     }
 
     async addNote(note) {

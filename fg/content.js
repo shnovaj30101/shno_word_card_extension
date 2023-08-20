@@ -1,9 +1,4 @@
 
-//let anki_word_card_addition_options = {};
-let awca_options = {
-    prefix: 'awca_'
-};
-
 (async function() {
     let main_status = "close";
     let select_text = '';
@@ -16,18 +11,18 @@ let awca_options = {
     // problem_text必須和 onmouseup 綁定 並且被 ensure_problem event 使用
     let display_elem = null;
 
-    $(document).on('mouseover', '.'+awca_options.prefix+'delete_chosen_word', function () {
+    $(document).on('mouseover', '.delete_chosen_word', function () {
         $(this).css('background-color', '#EC5151');
         $(this).css('color', '#FFFFFF');
     });
 
-    $(document).on('mouseout', '.'+awca_options.prefix+'delete_chosen_word', function () {
+    $(document).on('mouseout', '.delete_chosen_word', function () {
         $(this).css('background-color', '');
         $(this).css('color', '#EC5151');
     });
 
-    $(document).on('click', '.'+awca_options.prefix+'delete_chosen_word', function () {
-        for (let elem of $('.'+awca_options.prefix+'word_span').toArray()) {
+    $(document).on('click', '.delete_chosen_word', function () {
+        for (let elem of $('.word_span').toArray()) {
             if ($(elem).data('index') === $(this).data('index')) {
                 $(elem).css('color', '');
                 $(elem).css("text-decoration","");
@@ -36,24 +31,24 @@ let awca_options = {
         $(this).parent().parent().remove();
     });
 
-    $(document).on('click', '.'+awca_options.prefix+'word_span', function () {
+    $(document).on('click', '.word_span', function () {
         choose_word($(this), $(this).data('index'), $(this).data('word'));
     });
 
-    $(document).on('click', '.'+awca_options.prefix+'answer_info', function () {
+    $(document).on('click', '.answer_info', function () {
     });
 
-    $(document).on('click', '#'+awca_options.prefix+'ensure_problem_btn', function () {
+    $(document).on('click', '#ensure_problem_btn', function () {
         let problem_data_arr = [];
         problem_data_arr.push(problem_text);
 
         let problem_input_arr = [];
-        if ($('.'+awca_options.prefix+'chosen_word').toArray().length === 0) {
+        if ($('.chosen_word').toArray().length === 0) {
             alert("No word is chosen");
             return;
         }
-        for (let elem of $('.'+awca_options.prefix+'chosen_word').toArray()) {
-            let problem_input = $(elem).find('.'+awca_options.prefix+'problem_input').val();
+        for (let elem of $('.chosen_word').toArray()) {
+            let problem_input = $(elem).find('.problem_input').val();
             if (problem_input.length === 0) {
                 alert("some problem input's length is zero");
                 return;
@@ -63,15 +58,15 @@ let awca_options = {
         problem_data_arr.push(problem_input_arr.join(','));
 
         let word_index_arr = [];
-        for (let elem of $('.'+awca_options.prefix+'chosen_word').toArray()) {
+        for (let elem of $('.chosen_word').toArray()) {
             let word_index = $(elem).data('index');
             word_index_arr.push(word_index);
         }
         problem_data_arr.push(word_index_arr.join(','));
 
         let answer_input_arr = [];
-        for (let elem of $('.'+awca_options.prefix+'chosen_word').toArray()) {
-            let answer_input = $(elem).find('.'+awca_options.prefix+'answer_input').val();
+        for (let elem of $('.chosen_word').toArray()) {
+            let answer_input = $(elem).find('.answer_input').val();
             if (answer_input.length === 0) {
                 alert("some answer input's length is zero");
                 return;
@@ -96,8 +91,8 @@ let awca_options = {
 
 
     function hover_on_display_region() {
-        return document.getElementById(awca_options.prefix+"select_text_display_region") !== null &&
-            document.getElementById(awca_options.prefix+"select_text_display_region").matches(':hover');
+        return document.getElementById("select_text_display_region") !== null &&
+            document.getElementById("select_text_display_region").matches(':hover');
     }
 
     function getSelectionText() {
@@ -134,11 +129,12 @@ let awca_options = {
                 max-width: 500px;\
                 border: 0.5px solid #E0E0E0;\
                 position: fixed;\
+                color:#969696;\
                 z-index: 999999 !important;\
                 background-color:#FAFAFA;\
                 top: 0;\
                 right: 0;");
-            display_elem.setAttribute("id", awca_options.prefix+"select_text_display_region");
+            display_elem.setAttribute("id", "select_text_display_region");
 
             document.body.appendChild(display_elem);
             construct_display_interface();
@@ -147,10 +143,11 @@ let awca_options = {
 
     function construct_display_interface() {
         let render_arr = [];
-        render_arr.push('<div id="'+awca_options.prefix+'sentence_region" \
+        render_arr.push('<div id="sentence_region" \
             style="border: 1px solid #CCCCCC;\
                 margin: 15px;\
                 border-radius: 4px 4px 0px 0px;\
+                color:#343541;\
                 background-color: #F7F7F7;\
                 padding: 10px;\
                 font-size: 13px;\
@@ -161,13 +158,13 @@ let awca_options = {
         let word_list = problem_text.split(/\s+/);
         for (let i = 0 ; i < word_list.length ; i++) {
             let word_encode = word_list[i].replace(/'/g, "&apos;").replace(/"/g, '&quot;').replace(/&/g,"&amp;");
-            render_arr.push('<span class="'+awca_options.prefix+'word_span" data-index="' + i.toString() + '" data-word="' + word_encode + '">' + word_list[i] + "</span>");
+            render_arr.push('<span class="word_span" data-index="' + i.toString() + '" data-word="' + word_encode + '">' + word_list[i] + "</span>");
         }
 
         render_arr.push('</div>')
 
         render_arr.push('</div>')
-        render_arr.push('<div id="'+awca_options.prefix+'ensure_problem_btn"\
+        render_arr.push('<div id="ensure_problem_btn"\
             style="border-radius: 4px;\
                 width: 50px;\
                 text-align:center;\
@@ -183,9 +180,9 @@ let awca_options = {
         render_arr.push('</div>')
 
 
-        $('#'+awca_options.prefix+'select_text_display_region').append(render_arr.join('\n'))
+        $('#select_text_display_region').append(render_arr.join('\n'))
 
-        let display_elem = document.getElementById(awca_options.prefix+"select_text_display_region");
+        let display_elem = document.getElementById("select_text_display_region");
         let now_display_elem_width = display_elem.offsetWidth;
         display_elem.setAttribute(
                 "style",
@@ -193,6 +190,7 @@ let awca_options = {
                 width: " + now_display_elem_width.toString() + "px;\
                 border: 0.5px solid #E0E0E0;\
                 position: fixed;\
+                color:#343541;\
                 z-index: 999999 !important;\
                 background-color:#FAFAFA;\
                 top: 0;\
@@ -204,24 +202,25 @@ let awca_options = {
         $(target_elem).css("color","red");
         $(target_elem).css("text-decoration","underline");
         let render_arr = [];
-        render_arr.push('<div class="'+awca_options.prefix+'chosen_word" data-index="' + index + '" \
+        render_arr.push('<div class="chosen_word" data-index="' + index + '" \
             style="border-bottom: 1px solid #CCCCCC;\
                 padding-top: 5px;\
                 display: flex;\
                 flex-wrap: wrap;\
+                color:#343541;\
                 border-top: 0.1px solid #CCCCCC;\
                 border-left: 1px solid #CCCCCC;\
                 border-right: 1px solid #CCCCCC;\
                 margin: 15px;\
                 margin-top: -15px">');
 
-        render_arr.push('<div class="'+awca_options.prefix+'problem_wrapper" \
+        render_arr.push('<div class="problem_wrapper" \
             style="\
                 flex: 1 1 auto;\
                 display: flex;\
                 min-width: 120px;">');
 
-        render_arr.push('<div class="'+awca_options.prefix+'delete_chosen_word" data-index="' + index.toString() + '"\
+        render_arr.push('<div class="delete_chosen_word" data-index="' + index.toString() + '"\
             style="border-radius: 4px;\
                 border: 1px solid #EC5151;\
                 text-align:center;\
@@ -233,13 +232,14 @@ let awca_options = {
                 margin-top: 0px;">');
         render_arr.push('X</div>');
 
-        render_arr.push('<div class="'+awca_options.prefix+'problem_info" \
+        render_arr.push('<div class="problem_info" \
             style="margin: 5px;\
                 margin-top: 0px;\
                 margin-left: 0px;\
                 width: 30px;\
                 height:20px;\
                 border: 1px solid #CED4DA;\
+                color:#343541;\
                 flex: 0 0 auto;\
                 text-align: center;\
                 font-size: 13px;\
@@ -248,7 +248,7 @@ let awca_options = {
         render_arr.push("題目");
         render_arr.push('</div>')
 
-        render_arr.push('<input type="text" class="'+awca_options.prefix+'problem_input" \
+        render_arr.push('<input type="text" class="problem_input" \
             value= "' + str.replace(/'/g,"&apos;").replace(/"/g,'&quot;').replace(/,/g,'').replace(/\.$/g,'') + '"\
             style="margin: 5px;\
                 margin-top: 0px;\
@@ -262,19 +262,20 @@ let awca_options = {
 
         render_arr.push('</div>');
 
-        render_arr.push('<div class="'+awca_options.prefix+'answer_wrapper" \
+        render_arr.push('<div class="answer_wrapper" \
             style="\
                 display: flex;\
                 flex: 1 1 auto;\
                 min-width: 150px;">');
 
-        render_arr.push('<div class="'+awca_options.prefix+'answer_info" \
+        render_arr.push('<div class="answer_info" \
             style="margin: 5px;\
                 margin-top: 0px;\
                 width: 30px;\
                 height:20px;\
                 border: 1px solid #CED4DA;\
                 flex: 0 0 auto;\
+                color:#343541;\
                 text-align: center;\
                 font-size: 13px;\
                 border-radius: 4px 0px 0px 4px">')
@@ -282,7 +283,7 @@ let awca_options = {
         render_arr.push("答案");
         render_arr.push('</div>')
 
-        render_arr.push('<input type="text" class="'+awca_options.prefix+'answer_input"\
+        render_arr.push('<input type="text" class="answer_input"\
             style="margin: 5px;\
                 margin-top: 0px;\
                 margin-left: -5px;\
@@ -300,7 +301,7 @@ let awca_options = {
         let prev_elem = null;
         let is_last_elem = true;
 
-        for (let elem of $('.'+awca_options.prefix+'chosen_word').toArray()) {
+        for (let elem of $('.chosen_word').toArray()) {
             if (parseInt($(elem).data('index')) > index) {
                 is_last_elem = false;
                 break;
@@ -312,7 +313,7 @@ let awca_options = {
         }
 
         if (prev_elem === null) {
-            $('#'+awca_options.prefix+'sentence_region').after(render_arr.join('\n'))
+            $('#sentence_region').after(render_arr.join('\n'))
         } else {
             $(prev_elem).after(render_arr.join('\n'))
         }
