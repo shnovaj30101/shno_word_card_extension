@@ -1,4 +1,11 @@
 
+class ProblemFormatError extends Error {
+    constructor (message) {
+        super(message);
+		this.name = this.constructor.name;
+    }
+}
+
 (async function() {
     let main_status = "close";
     let select_text = '';
@@ -38,57 +45,91 @@
     $(document).on('click', '.answer_info', function () {
     });
 
-    $(document).on('click', '#ensure_problem_btn', function () {
-        let problem_data_arr = [];
-        problem_data_arr.push(problem_text);
+    $(document).on('click', '#add_to_anki_btn', function () {
+        let problem_data;
+        try {
+            problem_data = format_problem_data();
+            chrome.runtime.sendMessage({
+                type: "save_problem_to_anki",
+                problem: problem_data
+            }, function (response) {
+                if (response.success) {
+                    if (display_elem !== null) {
+                        document.body.removeChild(display_elem);
+                        display_elem = null;
+                    }
+                } else {
+                    // 顯示 XX
+                }
+            });
+        } catch (err) {
+            if (err instanceof ProblemFormatError) {
+            } else {
+                throw err;
+            }
+        }
+    });
+
+    function format_problem_data () {
+        let problem_data = {}; 
+        problem_data['sentence'] = problem_text;
 
         let problem_input_arr = [];
         if ($('.chosen_word').toArray().length === 0) {
             alert("No word is chosen");
-            return;
+            throw new ProblemFormatError("No word is chosen");
         }
         for (let elem of $('.chosen_word').toArray()) {
             let problem_input = $(elem).find('.problem_input').val();
             if (problem_input.length === 0) {
                 alert("some problem input's length is zero");
-                return;
+                throw new ProblemFormatError("some problem input's length is zero");
             }
             problem_input_arr.push(problem_input);
         }
-        problem_data_arr.push(problem_input_arr.join(','));
+        problem_data['word_list'] = problem_input_arr.join(',');
 
         let word_index_arr = [];
         for (let elem of $('.chosen_word').toArray()) {
             let word_index = $(elem).data('index');
             word_index_arr.push(word_index);
         }
-        problem_data_arr.push(word_index_arr.join(','));
+        problem_data['pos_list'] = word_index_arr.join(',');
 
         let answer_input_arr = [];
         for (let elem of $('.chosen_word').toArray()) {
             let answer_input = $(elem).find('.answer_input').val();
             if (answer_input.length === 0) {
                 alert("some answer input's length is zero");
-                return;
+                throw new ProblemFormatError("some answer input's length is zero");
             }
             answer_input_arr.push(answer_input);
         }
-        problem_data_arr.push(answer_input_arr.join(','));
+        problem_data['answer_list'] = answer_input_arr.join(',');
 
-        //alert(problem_data_arr.join('\t'));
+        return problem_data;
+    }
 
-        chrome.runtime.sendMessage({
-            type: "send_problem",
-            problem: problem_data_arr.join('\t')
-        }, function (response) {
-            if (display_elem !== null) {
-                document.body.removeChild(display_elem);
-                display_elem = null;
+    $(document).on('click', '#ensure_problem_btn', function () {
+        let problem_data;
+        try {
+            problem_data = format_problem_data();
+            chrome.runtime.sendMessage({
+                type: "save_problem_to_bg",
+                problem: problem_data
+            }, function (response) {
+                if (display_elem !== null) {
+                    document.body.removeChild(display_elem);
+                    display_elem = null;
+                }
+            });
+        } catch (err) {
+            if (err instanceof ProblemFormatError) {
+            } else {
+                throw err;
             }
-        });
-
+        }
     });
-
 
     function hover_on_display_region() {
         return document.getElementById("select_text_display_region") !== null &&
@@ -174,7 +215,9 @@
                 background-color: #6C747D;\
                 color: #FFFFFF;\
                 font-size:13px;\
-                margin-top: -10px;\
+                display: inline-block;\
+                margin-top: 0px;\
+                margin-right: 0px;\
                 margin-bottom: 5px;">')
         render_arr.push('Ensure')
         render_arr.push('</div>')
@@ -196,6 +239,32 @@
                 top: 0;\
                 right: 0;"
         );
+
+        chrome.runtime.sendMessage({
+            type: "detect_anki_connect",
+        }, function (response) {
+            if (response.success && response.result) {
+                let render_anki_connect_arr = [];
+                render_anki_connect_arr.push('<div id="add_to_anki_btn"\
+                    style="border-radius: 4px;\
+                        width: 50px;\
+                        text-align:center;\
+                        line-height: 25px;\
+                        height: 25px;\
+                        margin: 15px;\
+                        background-color: #6C747D;\
+                        color: #FFFFFF;\
+                        font-size:13px;\
+                        display: inline-block;\
+                        margin-top: 0px;\
+                        margin-right: 0px;\
+                        margin-bottom: 5px;">')
+                render_anki_connect_arr.push('Add')
+                render_anki_connect_arr.push('</div>')
+
+                $('#select_text_display_region').append(render_anki_connect_arr.join('\n'))
+            }
+        });
     }
 
     function choose_word(target_elem, index, str) {

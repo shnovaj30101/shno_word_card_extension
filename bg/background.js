@@ -46,8 +46,13 @@ class SWCBack {
 let swcback = new SWCBack();
 
 function on_message(request, sender, callback) {
-    if (request.type === "send_problem") {
-        swcback.problem_list.push(request.problem);
+    if (request.type === "save_problem_to_bg") {
+        let problem_text =
+            request.problem['sentence'] + '\t' +
+            request.problem['word_list'] + '\t' +
+            request.problem['pos_list'] + '\t' +
+            request.problem['answer_list'];
+        swcback.problem_list.push(problem_text);
         callback({'success': true});
     } else if (request.type === "get_problem_list") {
         let problem_list = swcback.get_problem_list();
@@ -69,7 +74,7 @@ function on_message(request, sender, callback) {
         let target_value = request.value;
         swcback.anki_options.deck = target_value;
         callback({'success': true});
-    } else if (request.type === "detect_anki_connect") {
+    } else if (request.type === "get_anki_options") {
         (async () => {
             let version = await swcback.ankiconnect.getVersion();
 
@@ -90,6 +95,59 @@ function on_message(request, sender, callback) {
                     'anki_options': swcback.anki_options,
                 });
             }
+        })();
+        return true;
+    } else if (request.type === "detect_anki_connect") {
+        (async () => {
+            let version = await swcback.ankiconnect.getVersion();
+            if (!version) {
+                callback({'success': true, 'result': false});
+            } else {
+                callback({'success': true, 'result': true});
+            }
+        })();
+        return true;
+    } else if (request.type === "save_problem_to_anki") {
+        (async () => {
+            let problem_text =
+                request.problem['sentence'] + '\t' +
+                request.problem['word_list'] + '\t' +
+                request.problem['pos_list'] + '\t' +
+                request.problem['answer_list'];
+
+            let note = {
+                "deckName": swcback.anki_options.deck,
+                "modelName": "shno_word_card",
+                "fields": {
+                    "sentence": request.problem['sentence'],
+                    "word_list": request.problem['word_list'],
+                    "pos_list": request.problem['pos_list'],
+                    "answer_list": request.problem['answer_list']
+                },
+                "options": {
+                    "allowDuplicate": true,
+                    "duplicateScope": "deck",
+                    "duplicateScopeOptions": {
+                        "deckName": swcback.anki_options.deck,
+                        "checkChildren": false,
+                        "checkAllModels": false
+                    }
+                },
+                "tags": []
+            };
+
+            if (swcback.anki_options.tag.length > 0) {
+                note.tags.push(swcback.anki_options.tag);
+            }
+
+            let response = await swcback.ankiconnect.addNote(note);
+
+            if (response) {
+                callback({'success': true});
+            } else {
+                callback({'success': false});
+            }
+
         })();
         return true;
     }

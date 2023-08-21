@@ -45,8 +45,8 @@ function on_ankiconnect_option_change() {
 	});
 }
 
-function detect_anki_connect() {
-	chrome.runtime.sendMessage({ type: "detect_anki_connect" }, function(response) {
+function render_anki_options() {
+	chrome.runtime.sendMessage({ type: "get_anki_options" }, function(response) {
         if (response.success === true) {
             let deck_name_list = response.deck_name_list;
             let target_deck = response.anki_options.deck;
@@ -67,7 +67,7 @@ function detect_anki_connect() {
 }
 
 function onReady() {
-    detect_anki_connect();
+    render_anki_options();
 
     $("#open-btn").click(on_open);
     $("#close-btn").click(on_close);
