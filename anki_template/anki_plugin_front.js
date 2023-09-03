@@ -136,7 +136,7 @@ function add_url(url, liContainer) {
     rowDiv.className = "row";
 
     var questionInputGroup = document.createElement("div");
-    questionInputGroup.className = "input-group input-group-sm col-sm-5";
+    questionInputGroup.className = "input-group input-group-sm col-sm-12";
 
     var questionInputGroupPrepend = document.createElement("div");
     questionInputGroupPrepend.className = "input-group-prepend";
@@ -165,26 +165,30 @@ function add_remark(remark, liContainer) {
     rowDiv.className = "row";
 
     var questionInputGroup = document.createElement("div");
-    questionInputGroup.className = "input-group input-group-sm col-sm-5";
-
-    var questionInputGroupPrepend = document.createElement("div");
-    questionInputGroupPrepend.className = "input-group-prepend";
-
-    var questionSpan = document.createElement("span");
-    questionSpan.className = "input-group-text";
-    questionSpan.textContent = "備註";
+    questionInputGroup.className = "input-group input-group-sm col-sm-12";
 
     var questionInput = document.createElement("input");
     questionInput.type = "text";
     questionInput.className = "form-control";
-    questionInput.value = remark;
+    questionInput.value = "備註";
     questionInput.readOnly = true;
 
-    questionInputGroupPrepend.appendChild(questionSpan);
-    questionInputGroup.appendChild(questionInputGroupPrepend);
     questionInputGroup.appendChild(questionInput);
 
     rowDiv.appendChild(questionInputGroup);
+
+    var questionInputGroup_2 = document.createElement("div");
+    questionInputGroup_2.className = "input-group input-group-sm col-sm-12";
+
+    var questionInput_2 = document.createElement("textarea");
+    questionInput_2.type = "text";
+    questionInput_2.className = "form-control";
+    questionInput_2.value = remark;
+    questionInput_2.readOnly = true;
+
+    questionInputGroup_2.appendChild(questionInput_2);
+
+    rowDiv.appendChild(questionInputGroup_2);
 
     liContainer.appendChild(rowDiv);
 }
