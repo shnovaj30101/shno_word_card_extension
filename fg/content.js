@@ -17,6 +17,15 @@ class ProblemFormatError extends Error {
         // onmousedown -> onnouseup(題目文字不變) -> onmousechane (select_text改變)
     // problem_text必須和 onmouseup 綁定 並且被 ensure_problem event 使用
     let display_elem = null;
+    let select_text_display_region_hover = false;
+
+    $(document).on('mouseover', '#select_text_display_region', function () {
+        select_text_display_region_hover = true;
+    });
+
+    $(document).on('mouseout', '#select_text_display_region', function () {
+        select_text_display_region_hover = false;
+    });
 
     $(document).on('mouseover', '.delete_chosen_word', function () {
         $(this).css('background-color', '#EC5151');
@@ -132,8 +141,10 @@ class ProblemFormatError extends Error {
     });
 
     function hover_on_display_region() {
+        //return document.getElementById("select_text_display_region") !== null &&
+            //document.getElementById("select_text_display_region").matches(':hover');
         return document.getElementById("select_text_display_region") !== null &&
-            document.getElementById("select_text_display_region").matches(':hover');
+            select_text_display_region_hover;
     }
 
     function getSelectionText() {
