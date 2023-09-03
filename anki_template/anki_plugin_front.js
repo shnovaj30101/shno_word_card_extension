@@ -114,6 +114,79 @@ function construct_problem_text() {
     text_render_arr.forEach(function(span) {
         problemText.appendChild(span);
     });
+
+    var itemContainer = document.querySelector("#problem_list");
+    if ("{{url}}".length > 0) {
+        var liContainer = document.createElement("li");
+        liContainer.className = "list-group-item problem_item";
+        add_url("{{url}}", liContainer);
+        itemContainer.appendChild(liContainer);
+    }
+
+    if ("{{remark}}".length > 0) {
+        var liContainer = document.createElement("li");
+        liContainer.className = "list-group-item problem_item";
+        add_remark("{{remark}}", liContainer);
+        itemContainer.appendChild(liContainer);
+    }
+}
+
+function add_url(url, liContainer) {
+    var rowDiv = document.createElement("div");
+    rowDiv.className = "row";
+
+    var questionInputGroup = document.createElement("div");
+    questionInputGroup.className = "input-group input-group-sm col-sm-5";
+
+    var questionInputGroupPrepend = document.createElement("div");
+    questionInputGroupPrepend.className = "input-group-prepend";
+
+    var questionSpan = document.createElement("span");
+    questionSpan.className = "input-group-text";
+    questionSpan.textContent = "網址";
+
+    var questionInput = document.createElement("input");
+    questionInput.type = "text";
+    questionInput.className = "form-control";
+    questionInput.value = url;
+    questionInput.readOnly = true;
+
+    questionInputGroupPrepend.appendChild(questionSpan);
+    questionInputGroup.appendChild(questionInputGroupPrepend);
+    questionInputGroup.appendChild(questionInput);
+
+    rowDiv.appendChild(questionInputGroup);
+
+    liContainer.appendChild(rowDiv);
+}
+
+function add_remark(remark, liContainer) {
+    var rowDiv = document.createElement("div");
+    rowDiv.className = "row";
+
+    var questionInputGroup = document.createElement("div");
+    questionInputGroup.className = "input-group input-group-sm col-sm-5";
+
+    var questionInputGroupPrepend = document.createElement("div");
+    questionInputGroupPrepend.className = "input-group-prepend";
+
+    var questionSpan = document.createElement("span");
+    questionSpan.className = "input-group-text";
+    questionSpan.textContent = "備註";
+
+    var questionInput = document.createElement("input");
+    questionInput.type = "text";
+    questionInput.className = "form-control";
+    questionInput.value = remark;
+    questionInput.readOnly = true;
+
+    questionInputGroupPrepend.appendChild(questionSpan);
+    questionInputGroup.appendChild(questionInputGroupPrepend);
+    questionInputGroup.appendChild(questionInput);
+
+    rowDiv.appendChild(questionInputGroup);
+
+    liContainer.appendChild(rowDiv);
 }
 
 construct_problem_text();
