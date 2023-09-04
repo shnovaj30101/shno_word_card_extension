@@ -18,6 +18,7 @@ class ProblemFormatError extends Error {
     // problem_text必須和 onmouseup 綁定 並且被 ensure_problem event 使用
     let display_elem = null;
     let select_text_display_region_hover = false;
+    let load_url = false;
 
     $(document).on('mouseover', '#select_text_display_region', function () {
         select_text_display_region_hover = true;
@@ -35,6 +36,44 @@ class ProblemFormatError extends Error {
     $(document).on('mouseout', '.delete_chosen_word', function () {
         $(this).css('background-color', '');
         $(this).css('color', '#EC5151');
+    });
+
+    $(document).on('mouseover', '#load_url', function () {
+        if (load_url) {
+            $(this).css('background-color', '#EC5151');
+            $(this).css('color', '#FFFFFF');
+        } else {
+            $(this).css('background-color', '#238636');
+            $(this).css('color', '#FFFFFF');
+        }
+    });
+
+    $(document).on('mouseout', '#load_url', function () {
+        if (load_url) {
+            $(this).css('background-color', '');
+            $(this).css('color', '#EC5151');
+        } else {
+            $(this).css('background-color', '');
+            $(this).css('color', '#238636');
+        }
+    });
+
+    $(document).on('click', '#load_url', function () {
+        if (load_url) {
+            load_url = false;
+            $('#url_input').val('');
+            $('#load_url').css('background-color', '#238636');
+            $('#load_url').css('border', '1px solid #238636');
+            $('#load_url').css('color', '#FFFFFF');
+            $('#load_url').html('V');
+        } else {
+            load_url = true;
+            $('#url_input').val(window.location.href);
+            $('#load_url').css('background-color', '#EC5151');
+            $('#load_url').css('border', '1px solid #EC5151');
+            $('#load_url').css('color', '#FFFFFF');
+            $('#load_url').html('X');
+        }
     });
 
     $(document).on('click', '.delete_chosen_word', function () {
@@ -213,9 +252,119 @@ class ProblemFormatError extends Error {
             render_arr.push('<span class="word_span" data-index="' + i.toString() + '" data-word="' + word_encode + '">' + word_list[i] + "</span>");
         }
 
-        render_arr.push('</div>')
+        render_arr.push('</div>') // #sentence_region inner_div
 
-        render_arr.push('</div>')
+        render_arr.push('</div>') // #sentence_region
+
+        render_arr.push('<div id="url_region"\
+            style="border-bottom: 1px solid #CCCCCC;\
+                padding-top: 5px;\
+                display: flex;\
+                flex-wrap: wrap;\
+                color:#343541;\
+                border-top: 0.1px solid #CCCCCC;\
+                border-left: 1px solid #CCCCCC;\
+                border-right: 1px solid #CCCCCC;\
+                margin: 15px;\
+                margin-top: -15px">');
+
+        render_arr.push('<div id="url_wrapper" \
+            style="\
+                flex: 1 1 auto;\
+                display: flex;\
+                min-width: 120px;">');
+
+        render_arr.push('<div id="load_url"\
+            style="border-radius: 4px;\
+                border: 1px solid #EC5151;\
+                text-align:center;\
+                margin: 5px;\
+                height:20px;\
+                line-height: 20px;\
+                color: #EC5151;\
+                width:20px;\
+                margin-top: 0px;">');
+        render_arr.push('X</div>'); // #load_url
+
+        render_arr.push('<div id="url_info" \
+            style="margin: 5px;\
+                margin-top: 0px;\
+                margin-left: 0px;\
+                width: 30px;\
+                height:20px;\
+                border: 1px solid #CED4DA;\
+                color:#343541;\
+                flex: 0 0 auto;\
+                text-align: center;\
+                font-size: 13px;\
+                border-radius: 4px 0px 0px 4px">')
+
+        render_arr.push("網址");
+        render_arr.push('</div>'); // #url_info
+
+        render_arr.push('<input type="text" id="url_input" \
+            value= "' + window.location.href + '"\
+            style="margin: 5px;\
+                margin-top: 0px;\
+                margin-left: -5px;\
+                height:20px;\
+                border: 1px solid #CED4DA;\
+                background: #FFFFFF;\
+                color: #000000;\
+                border-left: 0.1px;\
+                flex: 1 1 auto;\
+                padding-left: 5px;\
+                border-radius: 0px 4px 4px 0px">')
+
+        render_arr.push('</div>'); // #url_wrapper
+        render_arr.push('</div>'); // #url_region
+
+        render_arr.push('<div id="remark_region"\
+            style="border-bottom: 1px solid #CCCCCC;\
+                padding-top: 5px;\
+                display: flex;\
+                flex-wrap: wrap;\
+                color:#343541;\
+                border-top: 0.1px solid #CCCCCC;\
+                border-left: 1px solid #CCCCCC;\
+                border-right: 1px solid #CCCCCC;\
+                margin: 15px;\
+                margin-top: -15px">');
+
+        render_arr.push('<div id="mark_wrapper" \
+            style="\
+                flex: 1 1 auto;\
+                display: flex;\
+                min-width: 120px;">');
+
+        render_arr.push('<div id="mark_info" \
+            style="margin: 5px;\
+                margin-top: 0px;\
+                margin-left: 5px;\
+                width: 60px;\
+                height:20px;\
+                border: 1px solid #CED4DA;\
+                color:#343541;\
+                flex: 0 0 auto;\
+                text-align: center;\
+                font-size: 13px;\
+                border-radius: 4px 4px 4px 4px">')
+
+        render_arr.push("備註");
+        render_arr.push('</div>'); // #mark_info
+
+        render_arr.push('<textarea id="mark_input"\
+            style="background: #FFFFFF;\
+                border:3px orange dashed;\
+                width: 300px;\
+                height:100px;\
+                color: #000000;\
+                border-radius: 4px 4px 4px 4px">')
+        render_arr.push('</textarea>');
+
+        render_arr.push('</div>'); // #mark_wrapper
+        render_arr.push('</div>'); // #mark_region
+
         render_arr.push('<div id="ensure_problem_btn"\
             style="border-radius: 4px;\
                 width: 50px;\
@@ -232,7 +381,6 @@ class ProblemFormatError extends Error {
                 margin-bottom: 5px;">')
         render_arr.push('Ensure')
         render_arr.push('</div>')
-
 
         $('#select_text_display_region').append(render_arr.join('\n'))
 
@@ -276,6 +424,8 @@ class ProblemFormatError extends Error {
                 $('#select_text_display_region').append(render_anki_connect_arr.join('\n'))
             }
         });
+
+        load_url = true;
     }
 
     function choose_word(target_elem, index, str) {
@@ -335,6 +485,8 @@ class ProblemFormatError extends Error {
                 margin-left: -5px;\
                 height:20px;\
                 border: 1px solid #CED4DA;\
+                background: #FFFFFF;\
+                color: #000000;\
                 border-left: 0.1px;\
                 flex: 1 1 auto;\
                 padding-left: 5px;\
@@ -369,6 +521,8 @@ class ProblemFormatError extends Error {
                 margin-left: -5px;\
                 height:20px;\
                 border: 1px solid #CED4DA;\
+                background: #FFFFFF;\
+                color: #000000;\
                 border-left: 0.1px;\
                 flex: 1 1 auto;\
                 padding-left: 5px;\
