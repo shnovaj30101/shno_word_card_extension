@@ -109,12 +109,6 @@ function on_message(request, sender, callback) {
         return true;
     } else if (request.type === "save_problem_to_anki") {
         (async () => {
-            let problem_text =
-                request.problem['sentence'] + '\t' +
-                request.problem['word_list'] + '\t' +
-                request.problem['pos_list'] + '\t' +
-                request.problem['answer_list'];
-
             let note = {
                 "deckName": swcback.anki_options.deck,
                 "modelName": "shno_word_card",
@@ -122,7 +116,9 @@ function on_message(request, sender, callback) {
                     "sentence": request.problem['sentence'],
                     "word_list": request.problem['word_list'],
                     "pos_list": request.problem['pos_list'],
-                    "answer_list": request.problem['answer_list']
+                    "answer_list": request.problem['answer_list'],
+                    "url": request.problem['url'],
+                    "remark": request.problem['remark'],
                 },
                 "options": {
                     "allowDuplicate": true,

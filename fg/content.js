@@ -155,6 +155,9 @@ class ProblemFormatError extends Error {
         }
         problem_data['answer_list'] = answer_input_arr.join(',');
 
+        problem_data['url'] = $("#url_input").val();
+        problem_data['remark'] = $("#remark_input").val();
+
         return problem_data;
     }
 
@@ -353,7 +356,7 @@ class ProblemFormatError extends Error {
         render_arr.push("備註");
         render_arr.push('</div>'); // #mark_info
 
-        render_arr.push('<textarea id="mark_input"\
+        render_arr.push('<textarea id="remark_input"\
             style="background: #FFFFFF;\
                 border:3px orange dashed;\
                 width: 300px;\
