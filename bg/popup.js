@@ -69,6 +69,16 @@ function render_anki_options() {
 function onReady() {
     render_anki_options();
 
+    $(document).on('mouseover', '.button', function () {
+        $(this).css('background-color', '#6C747D');
+        $(this).css('color', '#FFFFFF');
+    });
+
+    $(document).on('mouseout', '.button', function () {
+        $(this).css('background-color', '');
+        $(this).css('color', '#6C747D');
+    });
+
     $("#open-btn").click(on_open);
     $("#close-btn").click(on_close);
     $("#download-btn").click(on_download);

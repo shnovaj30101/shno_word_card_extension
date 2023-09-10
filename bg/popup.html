@@ -1,28 +1,147 @@
 <!doctype html>
 <html xmlns="http://www.w3.org/1999/xhtml"
-    style="height:180px; width:200px">
-  <head>
-    <title>Anki單字擷取設定</title>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-  </head>
+      style="height:230px; width:250px">
+    <head>
+        <title>Anki單字擷取設定</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+    </head>
 
-  <body>
-      <h3>Anki單字擷取設定 </h3>
-      <button id="open-btn">開啟</button>
-      <button id="close-btn">關閉</button>
-      <button id="download-btn">下載</button>
-      <button id="redownload-btn">重新下載</button>
-      <div id="ankiconnect-option">
-          <label>牌組：</label>
-          <select id="anki-deck">
-              <option value=""></option>
-          </select>
-          <br>
-          <label>標籤：</label>
-          <input id="anki-tag" type='text' style="display: inline">
-      </div>
-    <script src="../lib/jquery.min.js"></script>
-    <script src="popup.js"></script>
-  </body>
+    <body>
+        <h3>Anki單字擷取設定 </h3>
+        <div style="height: 35px;">
+            啟動選項：
+            <div id="open-btn"
+                 class="button"
+                 style="border-radius: 4px;
+                        border: 1px solid #6C747D;
+                        color: #6C747D;
+                        cursor: pointer;
+                        width: 50px;
+                        text-align:center;
+                        line-height: 25px;
+                        height: 25px;
+                        margin: 5px;
+                        font-size:13px;
+                        display: inline-block;
+                        margin-top: 0px;
+                        margin-right: 0px;
+                        margin-bottom: 5px;" >
+                        開啟
+            </div>
+            <div id="close-btn"
+                 class="button"
+                 style="border-radius: 4px;
+                        border: 1px solid #6C747D;
+                        color: #6C747D;
+                        cursor: pointer;
+                        width: 50px;
+                        text-align:center;
+                        line-height: 25px;
+                        height: 25px;
+                        margin: 5px;
+                        font-size:13px;
+                        display: inline-block;
+                        margin-top: 0px;
+                        margin-right: 0px;
+                        margin-bottom: 5px;" >
+                        關閉
+            </div>
+        </div>
+
+        <div style="height: 35px;">
+            下載選項：
+            <div id="download-btn"
+                 class="button"
+                 style="border-radius: 4px;
+                        border: 1px solid #6C747D;
+                        color: #6C747D;
+                        cursor: pointer;
+                        width: 50px;
+                        text-align:center;
+                        line-height: 25px;
+                        height: 25px;
+                        margin: 5px;
+                        font-size:13px;
+                        display: inline-block;
+                        margin-top: 0px;
+                        margin-right: 0px;
+                        margin-bottom: 5px;" >
+                        下載
+            </div>
+            <div id="redownload-btn"
+                 class="button"
+                 style="border-radius: 4px;
+                        border: 1px solid #6C747D;
+                        color: #6C747D;
+                        cursor: pointer;
+                        width: 80px;
+                        text-align:center;
+                        line-height: 25px;
+                        height: 25px;
+                        margin: 5px;
+                        font-size:13px;
+                        display: inline-block;
+                        margin-top: 0px;
+                        margin-right: 0px;
+                        margin-bottom: 5px;" >
+                        重新下載
+            </div>
+        </div>
+
+        <div id="ankiconnect-option"
+             style="border-radius: 4px;
+                    border:2px orange dashed;" >
+            
+            <div style="height: 25px;
+                margin-top:5px;
+                margin-left:5px;">
+            anki 選項：
+            </div>
+
+            <div style="height: 35px;
+                margin-left:5px;">
+            <label>牌組：</label>
+            <select id="anki-deck"
+                 style="border-radius: 4px;
+                        border: 1px solid #6C747D;
+                        color: #6C747D;
+                        cursor: pointer;
+                        width: 150px;
+                        text-align:center;
+                        line-height: 25px;
+                        height: 25px;
+                        margin: 5px;
+                        font-size:13px;
+                        display: inline-block;
+                        margin-top: 0px;
+                        margin-right: 0px;
+                        margin-bottom: 5px;" >
+                <option value=""></option>
+            </select>
+            </div>
+
+            <div style="height: 35px;
+                margin-left:5px;">
+            <label>標籤：</label>
+            <input id="anki-tag" type='text'
+                 style="border-radius: 4px;
+                        border: 1px solid #6C747D;
+                        color: #6C747D;
+                        cursor: pointer;
+                        width: 150px;
+                        text-align:center;
+                        line-height: 25px;
+                        height: 20px;
+                        margin: 5px;
+                        font-size:13px;
+                        display: inline;
+                        margin-top: 0px;
+                        margin-right: 0px;
+                        margin-bottom: 5px;" >
+            </div>
+        </div>
+        <script src="../lib/jquery.min.js"></script>
+        <script src="popup.js"></script>
+    </body>
 </html>
