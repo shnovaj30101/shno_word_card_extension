@@ -22,7 +22,5 @@
 			"js" : ["lib/jquery.min.js", "fg/content.js"]
 		}
 	],
-    "permissions": [
-        "activeTab", "tabs", "downloads"
-    ]
+    "permissions": []
 }
