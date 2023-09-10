@@ -43,7 +43,7 @@ class ProblemFormatError extends Error {
             $(this).css('background-color', '#EC5151');
             $(this).css('color', '#FFFFFF');
         } else {
-            $(this).css('background-color', '#238636');
+            $(this).css('background-color', '#18C37D');
             $(this).css('color', '#FFFFFF');
         }
     });
@@ -54,7 +54,7 @@ class ProblemFormatError extends Error {
             $(this).css('color', '#EC5151');
         } else {
             $(this).css('background-color', '');
-            $(this).css('color', '#238636');
+            $(this).css('color', '#18C37D');
         }
     });
 
@@ -62,8 +62,8 @@ class ProblemFormatError extends Error {
         if (load_url) {
             load_url = false;
             $('#url_input').val('');
-            $('#load_url').css('background-color', '#238636');
-            $('#load_url').css('border', '1px solid #238636');
+            $('#load_url').css('background-color', '#18C37D');
+            $('#load_url').css('border', '1px solid #18C37D');
             $('#load_url').css('color', '#FFFFFF');
             $('#load_url').html('V');
         } else {
@@ -91,6 +91,16 @@ class ProblemFormatError extends Error {
     });
 
     $(document).on('click', '.answer_info', function () {
+    });
+
+    $(document).on('mouseover', '#add_to_anki_btn', function () {
+        $(this).css('background-color', '#6C747D');
+        $(this).css('color', '#FFFFFF');
+    });
+
+    $(document).on('mouseout', '#add_to_anki_btn', function () {
+        $(this).css('background-color', '');
+        $(this).css('color', '#6C747D');
     });
 
     $(document).on('click', '#add_to_anki_btn', function () {
@@ -160,6 +170,16 @@ class ProblemFormatError extends Error {
 
         return problem_data;
     }
+
+    $(document).on('mouseover', '#ensure_problem_btn', function () {
+        $(this).css('background-color', '#6C747D');
+        $(this).css('color', '#FFFFFF');
+    });
+
+    $(document).on('mouseout', '#ensure_problem_btn', function () {
+        $(this).css('background-color', '');
+        $(this).css('color', '#6C747D');
+    });
 
     $(document).on('click', '#ensure_problem_btn', function () {
         let problem_data;
@@ -280,6 +300,7 @@ class ProblemFormatError extends Error {
         render_arr.push('<div id="load_url"\
             style="border-radius: 4px;\
                 border: 1px solid #EC5151;\
+                cursor: pointer;\
                 text-align:center;\
                 margin: 5px;\
                 height:20px;\
@@ -370,19 +391,20 @@ class ProblemFormatError extends Error {
 
         render_arr.push('<div id="ensure_problem_btn"\
             style="border-radius: 4px;\
-                width: 50px;\
+                border: 1px solid #6C747D;\
+                color: #6C747D;\
+                cursor: pointer;\
+                width: 150px;\
                 text-align:center;\
                 line-height: 25px;\
                 height: 25px;\
                 margin: 15px;\
-                background-color: #6C747D;\
-                color: #FFFFFF;\
                 font-size:13px;\
                 display: inline-block;\
                 margin-top: 0px;\
                 margin-right: 0px;\
                 margin-bottom: 5px;">')
-        render_arr.push('Ensure')
+        render_arr.push('Add to background')
         render_arr.push('</div>')
 
         $('#select_text_display_region').append(render_arr.join('\n'))
@@ -409,19 +431,20 @@ class ProblemFormatError extends Error {
                 let render_anki_connect_arr = [];
                 render_anki_connect_arr.push('<div id="add_to_anki_btn"\
                     style="border-radius: 4px;\
-                        width: 50px;\
+                        border: 1px solid #6C747D;\
+                        color: #6C747D;\
+                        width: 150px;\
+                        cursor: pointer;\
                         text-align:center;\
                         line-height: 25px;\
                         height: 25px;\
                         margin: 15px;\
-                        background-color: #6C747D;\
-                        color: #FFFFFF;\
                         font-size:13px;\
                         display: inline-block;\
                         margin-top: 0px;\
                         margin-right: 0px;\
                         margin-bottom: 5px;">')
-                render_anki_connect_arr.push('Add')
+                render_anki_connect_arr.push('Add to anki')
                 render_anki_connect_arr.push('</div>')
 
                 $('#select_text_display_region').append(render_anki_connect_arr.join('\n'))
@@ -456,6 +479,7 @@ class ProblemFormatError extends Error {
         render_arr.push('<div class="delete_chosen_word" data-index="' + index.toString() + '"\
             style="border-radius: 4px;\
                 border: 1px solid #EC5151;\
+                cursor: pointer;\
                 text-align:center;\
                 margin: 5px;\
                 height:20px;\
