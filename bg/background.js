@@ -51,7 +51,9 @@ function on_message(request, sender, callback) {
             request.problem['sentence'] + '\t' +
             request.problem['word_list'] + '\t' +
             request.problem['pos_list'] + '\t' +
-            request.problem['answer_list'];
+            request.problem['answer_list'] + '\t' +
+            request.problem['url'] + '\t' +
+            request.problem['remark'].replace(/\n/g, '\\n');
         swcback.problem_list.push(problem_text);
         callback({'success': true});
     } else if (request.type === "get_problem_list") {

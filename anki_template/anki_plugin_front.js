@@ -183,7 +183,7 @@ function add_remark(remark, liContainer) {
     var questionInput_2 = document.createElement("textarea");
     questionInput_2.type = "text";
     questionInput_2.className = "form-control";
-    questionInput_2.value = remark;
+    questionInput_2.value = remark.replace(/\\n/g, '\n');
     questionInput_2.readOnly = true;
 
     questionInputGroup_2.appendChild(questionInput_2);
