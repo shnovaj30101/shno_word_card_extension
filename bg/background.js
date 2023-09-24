@@ -1,47 +1,5 @@
 import { Ankiconnect } from './ankiconnect.js';
-
-class SWCBack {
-    constructor() {
-        this.problem_list = [];
-        this.pre_problem_list = [];
-        this.main_status = 'close';
-
-        this.ankiconnect = new Ankiconnect();
-        this.anki_options = {
-            deck: '',
-            tag: 'SWC',
-        };
-    }
-
-    on_open() {
-        this.main_status = 'open';
-        chrome.action.setBadgeText({text:''});
-    }
-
-    on_close() {
-        this.main_status = 'close';
-        chrome.action.setBadgeText({text:'off'});
-    }
-
-    get_problem_list() {
-        return this.problem_list;
-    }
-
-    get_problem_list_again() {
-        return this.pre_problem_list;
-    }
-
-    get_main_status() {
-        return this.main_status;
-    }
-
-    clear_problem_list() {
-        if (this.problem_list.length > 0) {
-            this.pre_problem_list = this.problem_list;
-        }
-        this.problem_list = [];
-    }
-}
+import { SWCBack, SWCBackInitFail } from './swcback.js';
 
 let swcback = new SWCBack();
 
@@ -54,7 +12,7 @@ function on_message(request, sender, callback) {
             request.problem['answer_list'] + '\t' +
             request.problem['url'] + '\t' +
             request.problem['remark'].replace(/\n/g, '\\n');
-        swcback.problem_list.push(problem_text);
+        swcback.push_problem(problem_text);
         callback({'success': true});
     } else if (request.type === "get_problem_list") {
         let problem_list = swcback.get_problem_list();
@@ -72,7 +30,7 @@ function on_message(request, sender, callback) {
     } else if (request.type === "get_main_status") {
         let main_status = swcback.get_main_status();
         callback({'status': main_status});
-    } else if (request.type === "ankiconnect_ooption_change") {
+    } else if (request.type === "anki_deck_change") {
         let target_value = request.value;
         swcback.anki_options.deck = target_value;
         callback({'success': true});
@@ -151,6 +109,16 @@ function on_message(request, sender, callback) {
     }
 }
 
-chrome.runtime.onMessage.addListener(on_message);
-chrome.action.setBadgeText({text:'off'});
+function on_message_wrapper (request, sender, callback) {
+    try {
+        on_message(request, sender, callback);
+    } catch (err) {
+        if (err instanceof SWCBackInitFail) {
+            callback({'success': false, 'reason': `swc_back init error`});
+        } else {
+            callback({'success': false, 'reason': `Unexpected error, err_msg: ${err.message}`});
+        }
+    }
+}
 
+chrome.runtime.onMessage.addListener(on_message_wrapper);

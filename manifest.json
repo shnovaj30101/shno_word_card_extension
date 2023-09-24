@@ -22,5 +22,5 @@
 			"js" : ["lib/jquery.min.js", "fg/content.js"]
 		}
 	],
-    "permissions": []
+    "permissions": [ "storage" ]
 }
