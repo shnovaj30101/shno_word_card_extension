@@ -189,9 +189,13 @@ class ProblemFormatError extends Error {
                 type: "save_problem_to_bg",
                 problem: problem_data
             }, function (response) {
-                if (display_elem !== null) {
-                    document.body.removeChild(display_elem);
-                    display_elem = null;
+                if (response.success) {
+                    if (display_elem !== null) {
+                        document.body.removeChild(display_elem);
+                        display_elem = null;
+                    }
+                } else {
+                    // 顯示 XX
                 }
             });
         } catch (err) {
@@ -586,7 +590,11 @@ class ProblemFormatError extends Error {
             chrome.runtime.sendMessage({
                 type: "get_main_status",
             }, function (response) {
-                return resolve(response.status);
+                if (response.success) {
+                    return resolve(response.result.status);
+                } else {
+                    return resolve(false);
+                }
             });
         })
     }
