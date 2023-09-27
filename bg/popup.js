@@ -47,42 +47,43 @@ function handle_get_anki_options (response) {
     }
 }
 
-function handle_func_wrapper (response) {
-    if (response.success === true) {
-    } else {
+function handle_func_wrapper (handle_func) {
+    
+    function inner (response) {
+        if (response.success === true) {
+            handle_func(response);
+        } else {
+            console.log(`${handle_func.name}'s args response not success, reason: ${response.reason}`);
+        }
     }
+
+    return inner;
 }
 
 function on_open() {
-	chrome.runtime.sendMessage({ type: "set_status_open" }, function(response) {
-	});
+	chrome.runtime.sendMessage({ type: "set_status_open" }, handle_func_wrapper(handle_set_status_open));
 }
 
 function on_close() {
-	chrome.runtime.sendMessage({ type: "set_status_close" }, function(response) {
-	});
+	chrome.runtime.sendMessage({ type: "set_status_close" }, handle_func_wrapper(handle_set_status_close));
 }
 
 function on_download() {
-	chrome.runtime.sendMessage({ type: "get_problem_list" }, function(response) {
-	});
+	chrome.runtime.sendMessage({ type: "get_problem_list" }, handle_func_wrapper(handle_get_problem_list));
 }
 
 function on_redownload() {
-	chrome.runtime.sendMessage({ type: "get_problem_list_again" }, function(response) {
-	});
+	chrome.runtime.sendMessage({ type: "get_problem_list_again" }, handle_func_wrapper(handle_get_problem_list_again));
 }
 
 function on_anki_deck_change() {
     let target_value = $("#anki-deck").val();
     console.log(`anki_deck_change target_value: ${target_value}`);
-	chrome.runtime.sendMessage({ type: "anki_deck_change", value: target_value }, function(response) {
-	});
+	chrome.runtime.sendMessage({ type: "anki_deck_change", value: target_value }, handle_func_wrapper(handle_anki_deck_change));
 }
 
 function render_anki_options() {
-	chrome.runtime.sendMessage({ type: "get_anki_options" }, function(response) {
-	});
+	chrome.runtime.sendMessage({ type: "get_anki_options" }, handle_func_wrapper(handle_get_anki_options));
 }
 
 function onReady() {
