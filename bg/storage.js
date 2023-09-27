@@ -17,7 +17,7 @@ function set_storage(key, value) {
     const dataToStore = {};
     dataToStore[key] = value;
 
-    chrome.storage.sync.set(dataToStore, function() {
+    chrome.storage.local.set(dataToStore, function() {
         if (chrome.runtime.lastError) {
             console.error(chrome.runtime.lastError);
         }
@@ -34,7 +34,7 @@ function init_storage(key, default_value) {
                 const dataToStore = {};
                 dataToStore[key] = default_value;
 
-                chrome.storage.sync.set(dataToStore, function() {
+                chrome.storage.local.set(dataToStore, function() {
                     if (chrome.runtime.lastError) {
                         console.error(chrome.runtime.lastError);
                     } else {
