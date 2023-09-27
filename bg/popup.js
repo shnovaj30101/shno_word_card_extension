@@ -7,31 +7,29 @@ function saveText(filename, text) {
 	tempElem.click();
 }
 
-function handle_set_status_open (response) {}
+function handle_set_status_open (result) {}
 
-function handle_set_status_close (response) {}
+function handle_set_status_close (result) {}
 
-function handle_get_problem_list (response) {
-    if (response.result.problem_list.length > 0) {
-        saveText('anki_problem.txt', response.problem_list.join('\n'));
+function handle_get_problem_list (result) {
+    if (result.problem_list.length > 0) {
+        saveText('anki_problem.txt', result.problem_list.join('\n'));
     }
 }
 
-function handle_get_problem_list_again (response) {
-    if (response.result.problem_list.length > 0) {
-        saveText('anki_problem.txt', response.problem_list.join('\n'));
+function handle_get_problem_list_again (result) {
+    if (result.problem_list.length > 0) {
+        saveText('anki_problem.txt', result.problem_list.join('\n'));
     }
 }
 
-function handle_anki_deck_change (response) {
-    console.log("anki_deck_change success");
-}
+function handle_anki_deck_change (result) {}
 
-function handle_get_anki_options (response) {
-    if (response.success === true) {
-        let deck_name_list = response.deck_name_list;
-        let target_deck = response.anki_options.deck;
-        let anki_tag = response.anki_options.tag;
+function handle_get_anki_options (result) {
+    if (Object.keys(result).length > 0) {
+        let deck_name_list = result.deck_name_list;
+        let target_deck = result.anki_options.deck;
+        let anki_tag = result.anki_options.tag;
         $("#anki-deck").empty();
         deck_name_list.forEach(
             deck_name => $("#anki-deck").append($('<option>', {value: deck_name, text: deck_name}))
@@ -42,16 +40,14 @@ function handle_get_anki_options (response) {
         $("#anki-tag").val(anki_tag);
         $("#ankiconnect-option").show();
     } else {
-        console.log(`get_anki_options fail, reason: ${response.reason}`);
         $("#ankiconnect-option").hide();
     }
 }
 
 function handle_func_wrapper (handle_func) {
-    
     function inner (response) {
         if (response.success === true) {
-            handle_func(response);
+            handle_func(response.result);
         } else {
             console.log(`${handle_func.name}'s args response not success, reason: ${response.reason}`);
         }
@@ -105,7 +101,6 @@ function onReady() {
     $("#redownload-btn").click(on_redownload);
     $("#anki-deck").on("change", on_anki_deck_change);
 }
-
 
 function utilAsync(func) {
     return function(...args) {

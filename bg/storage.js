@@ -9,6 +9,8 @@ const key_defaut_value_map = {
     },
 };
 
+let key_now_value_map = JSON.parse(JSON.stringify(key_defaut_value_map));
+
 let localStorageData = {};
 
 function set_storage(key, value) {
@@ -36,28 +38,28 @@ function init_storage(key, default_value) {
                     if (chrome.runtime.lastError) {
                         console.error(chrome.runtime.lastError);
                     } else {
-                        console.log(`Key ${key} default_value is set: ${default_value}`);
+                        console.log(`Key ${key} default_value is set: ${JSON.stringify(default_value)}`);
                     }
                 });
             }
 
             if (typeof variable === 'undefined') {
-                localStorageData[key] = default_value;
+                key_now_value_map[key] = default_value;
             } else {
-                localStorageData[key] = result[key];
+                key_now_value_map[key] = result[key];
             }
 
             Object.defineProperty(localStorageData, key, {
                 get: function () {
-                    return this[key];
+                    return key_now_value_map[key];
                 },
                 set: function (val) {
                     set_storage(key, val);
-                    this[key] = val;
+                    key_now_value_map[key] = val;
                 }
             });
-        }
-    });
+		}
+	});
 }
 
 Object.entries(key_defaut_value_map).forEach(([key, value]) => {

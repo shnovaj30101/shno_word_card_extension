@@ -1,17 +1,17 @@
 
 async function fetchWithTimeout(resource, options = {}) {
-  const { timeout = 8000 } = options;
-  
-  const controller = new AbortController();
-  const id = setTimeout(() => controller.abort(), timeout);
+    const { timeout = 8000 } = options;
 
-  const response = await fetch(resource, {
-    ...options,
-    signal: controller.signal  
-  });
-  clearTimeout(id);
+    const controller = new AbortController();
+    const id = setTimeout(() => controller.abort(), timeout);
 
-  return response;
+    const response = await fetch(resource, {
+        ...options,
+        signal: controller.signal  
+    });
+    clearTimeout(id);
+
+    return response;
 }
 
 class Ankiconnect {
@@ -71,7 +71,13 @@ class Ankiconnect {
     }
 
     async getVersion() {
-        let version = await this.ankiInvoke('version', {}, 100);
+        let version;
+        try {
+            version = await this.ankiInvoke('version', {}, 100);
+        } catch (e) {
+            console.log(e);
+            version = null;
+        }
         return version ? 'ver:' + version : null;
     }
 }
